@@ -67,5 +67,6 @@ int main() {
         matrices->c[0][0],
         matrices->c[SIZE - 1][SIZE - 1],
         matrices->c[SIZE / 2][SIZE / 2]);
+    munmap(matrices, sizeof(matrices_t));
     printf("Time: %.5fms\n", (end_time.tv_sec * 1000 + 1e-6 * end_time.tv_nsec) - (start_time.tv_sec * 1000 + 1e-6 * start_time.tv_nsec));
 }
