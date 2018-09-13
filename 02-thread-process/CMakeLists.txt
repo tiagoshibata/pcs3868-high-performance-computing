@@ -3,4 +3,5 @@ project(matrix_multiply C)
 find_package(Threads REQUIRED)
 
 add_executable(matrix_add_proc matrix_add_proc.c)
-target_link_libraries(matrix_add_proc Threads::Threads)
+add_executable(matrix_add_thread matrix_add_thread.c)
+target_link_libraries(matrix_add_thread Threads::Threads)
