@@ -51,7 +51,7 @@ int main() {
         pids[p] = fork();
         if (!pids[p]) {
             int start = (p * SIZE) / nprocs;
-            int end = ((p + 1) * SIZE) / nprocs - 1;
+            int end = ((p + 1) * SIZE) / nprocs;
             child_process(matrices, start, end);
         }
     }
@@ -63,5 +63,9 @@ int main() {
     }
     clock_gettime(CLOCK_MONOTONIC, &end_time);
 
+    printf("c[0][0] = %f, c[SIZE - 1][SIZE - 1] = %f, c[SIZE / 2][SIZE / 2] = %f\n",
+        matrices->c[0][0],
+        matrices->c[SIZE - 1][SIZE - 1],
+        matrices->c[SIZE / 2][SIZE / 2]);
     printf("Time: %.5fms\n", (end_time.tv_sec * 1000 + 1e-6 * end_time.tv_nsec) - (start_time.tv_sec * 1000 + 1e-6 * start_time.tv_nsec));
 }
