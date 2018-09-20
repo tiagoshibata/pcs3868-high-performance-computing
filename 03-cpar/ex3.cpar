@@ -1,0 +1,49 @@
+#include <stdio.h>
+shared int a[1000][1000];
+shared int valor_busca;
+
+task spec init_vetor();
+task body init_vetor()
+{
+  int i, j;
+  forall i=0 to 999
+  {
+    for (j=0; j<1000; j++)
+    { 
+      a[i][j] = i + j;
+    }
+  }
+}
+
+task spec busca_vetor();
+task body busca_vetor()
+{
+  int i, j;
+  forall i=0 to 999
+  {
+    for (j=0; j<1000; j++)
+    { 
+      if (a[i][j] == valor_busca)
+      {
+        printf("econtrado posicao %d %d\n", i, j);
+        fflush(stdout);
+      }
+    }
+  }
+}
+
+main()
+{
+  int elemento;
+  printf("Busca um elemento no vetor.\n");
+  create 4, init_vetor();
+  wait_proc(init_vetor);
+  printf("Vetor inicializado\n");
+  printf("Informe um elemento: ");
+  scanf("%d", &valor_busca);
+  create 4, busca_vetor();
+  wait_proc(busca_vetor);
+  printf("Busca finalizada\n");
+}
+
+
