@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <time.h>
+#include "mede_time.h"
+
 shared int a[1000][1000];
 shared int valor_busca;
 
@@ -35,15 +38,22 @@ task body busca_vetor()
 main()
 {
   int elemento;
+
   printf("Busca um elemento no vetor.\n");
+  TIMER_CLEAR;
+  TIMER_START;
   create 4, init_vetor();
   wait_proc(init_vetor);
-  printf("Vetor inicializado\n");
+  TIMER_STOP;
+  printf("Vetor inicializado, Time: %.5fms\n", 1000 * TIMER_ELAPSED);
   printf("Informe um elemento: ");
   scanf("%d", &valor_busca);
+  TIMER_CLEAR;
+  TIMER_START;
   create 4, busca_vetor();
   wait_proc(busca_vetor);
-  printf("Busca finalizada\n");
+  TIMER_STOP;
+  printf("Busca finalizada, Time: %.5fms\n", 1000 * TIMER_ELAPSED);
 }
 
 
