@@ -1,0 +1,95 @@
+#include <stdio.h>
+
+shared double a[100][100], b[100][100], c[100][100], d[100][100];
+shared double a_b[100][100], c_d[100][100], result[100][100];
+
+task spec initialize_a();
+task spec initialize_b();
+task spec initialize_c();
+task spec initialize_d();
+task spec mult_a_b();
+task spec mult_c_d();
+task spec add();
+
+task body initialize_a() {
+    int i;
+    forall i = 0 to 99 {
+        for (int j = 0; j < 100; j++) {
+            a[i][j] = i + j;
+        }
+    }
+}
+
+task body initialize_b() {
+    int i;
+    forall i = 0 to 99 {
+        for (int j = 0; j < 100; j++) {
+            b[i][j] = i + 2 * j;
+        }
+    }
+}
+
+task body initialize_c() {
+    int i;
+    forall i = 0 to 99 {
+        for (int j = 0; j < 100; j++) {
+            c[i][j] = 2 * i + 3 * j;
+        }
+    }
+}
+
+task body initialize_d() {
+    int i;
+    forall i = 0 to 99 {
+        for (int j = 0; j < 100; j++) {
+            d[i][j] = 2 * i + j;
+        }
+    }
+}
+
+task body mult_a_b() {
+    int i;
+    forall i = 0 to 99 {
+        for (int j = 0; j < 100; j++) {
+            a_b[i][j] = 0;
+            for (int k = 0; k < 100; k++) {
+                a_b[i][j] += a[i][k] * b[k][j];
+            }
+        }
+    }
+}
+
+task body mult_c_d() {
+    int i;
+    forall i = 0 to 99 {
+        for (int j = 0; j < 100; j++) {
+            c_d[i][j] = 0;
+            for (int k = 0; k < 100; k++) {
+                c_d[i][j] += c[i][k] * d[k][j];
+            }
+        }
+    }
+}
+
+task body add() {
+    int i;
+    forall i = 0 to 99 {
+        for (int j = 0; j < 100; j++) {
+            result[i][j] = a_b[i][j] + c_d[i][j];
+        }
+    }
+}
+
+int main() {
+    create 4, initialize_a();
+    create 4, initialize_b();
+    create 4, initialize_c();
+    create 4, initialize_d();
+    wait_all();
+    create 4, mult_a_b();
+    create 4, mult_c_d();
+    wait_all();
+    create 4, add();
+    wait_all();
+    printf("[0][0] = %f, [50][50] = %f, [99][99] = %f\n", result[0][0], result[50][50], result[99][99]);
+ }
