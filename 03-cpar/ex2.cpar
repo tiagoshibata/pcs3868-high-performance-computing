@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "mede_time.h"
 
 shared double a[100][100], b[100][100], c[100][100], d[100][100];
 shared double a_b[100][100], c_d[100][100], result[100][100];
@@ -81,15 +82,21 @@ task body add() {
 }
 
 int main() {
+    TIMER_START;
     create 4, initialize_a();
     create 4, initialize_b();
     create 4, initialize_c();
     create 4, initialize_d();
     wait_all();
+    TIMER_STOP;
+    printf("Initialization time: %.5fms\n", 1000 * TIMER_ELAPSED);
+    TIMER_START;
     create 4, mult_a_b();
     create 4, mult_c_d();
     wait_all();
     create 4, add();
     wait_all();
+    TIMER_STOP;
+    printf("Processing time: %.5fms\n", 1000 * TIMER_ELAPSED);
     printf("[0][0] = %f, [50][50] = %f, [99][99] = %f\n", result[0][0], result[50][50], result[99][99]);
  }
