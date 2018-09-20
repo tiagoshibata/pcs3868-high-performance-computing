@@ -1,0 +1,54 @@
+#include <stdio.h>
+
+task spec task1();
+task spec task2();
+task spec task3();
+task spec task4();
+task spec task5();
+task spec task6();
+
+task body task1() {
+    printf("tar1\n");
+}
+
+task body task2() {
+    printf("tar2\n");
+}
+
+task body task3() {
+    printf("tar3\n");
+}
+
+task body task4() {
+    printf("tar4\n");
+}
+
+task body task5() {
+    printf("tar5\n");
+}
+
+task body task6() {
+    printf("tar6\n");
+}
+
+int main() {
+    printf("seq1\n");
+    cobegin
+        create 1, task1();
+        create 1, task2();
+        wait_proc(task1);
+        wait_proc(task2);
+        printf("seq2\n");
+        create 1, task5();
+        create 1, task6();
+        wait_proc(task5);
+        wait_proc(task6);
+    also
+        create 1, task3();
+        create 1, task4();
+        wait_proc(task3);
+        wait_proc(task4);
+        printf("seq3\n");
+    coend
+}
+
