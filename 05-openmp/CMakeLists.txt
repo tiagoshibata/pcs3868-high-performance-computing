@@ -8,3 +8,7 @@ endif(NOT OPENMP_C_FOUND)
 add_executable(sum sum.c)
 target_link_libraries(sum PRIVATE OpenMP::OpenMP_C)
 target_compile_options(sum PRIVATE -Wall -Wextra -pedantic)
+
+add_executable(find_element find_element.c)
+target_link_libraries(find_element PRIVATE OpenMP::OpenMP_C)
+target_compile_options(find_element PRIVATE -Wall -Wextra -pedantic)
