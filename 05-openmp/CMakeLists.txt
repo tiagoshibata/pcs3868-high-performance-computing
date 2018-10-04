@@ -12,3 +12,9 @@ target_compile_options(sum PRIVATE -Wall -Wextra -pedantic)
 add_executable(find_element find_element.c)
 target_link_libraries(find_element PRIVATE OpenMP::OpenMP_C)
 target_compile_options(find_element PRIVATE -Wall -Wextra -pedantic)
+
+add_executable(sum_serial sum_serial.c)
+target_compile_options(sum_serial PRIVATE -Wall -Wextra -pedantic)
+
+add_executable(find_element_serial find_element_serial.c)
+target_compile_options(find_element_serial PRIVATE -Wall -Wextra -pedantic)
