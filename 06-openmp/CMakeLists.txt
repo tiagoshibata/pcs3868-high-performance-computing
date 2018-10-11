@@ -11,3 +11,7 @@ target_compile_options(matrix_multiply_add PRIVATE -Wall -Wextra -pedantic)
 
 add_executable(matrix_multiply_add_serial matrix_multiply_add_serial.c)
 target_compile_options(matrix_multiply_add_serial PRIVATE -Wall -Wextra -pedantic)
+
+add_executable(sections sections.c)
+target_link_libraries(sections PRIVATE OpenMP::OpenMP_C)
+target_compile_options(sections PRIVATE -Wall -Wextra -pedantic)

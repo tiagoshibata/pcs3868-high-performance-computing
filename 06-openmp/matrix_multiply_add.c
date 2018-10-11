@@ -21,20 +21,16 @@ void matrix_multiply(int result[SIZE][SIZE], int a[SIZE][SIZE], int b[SIZE][SIZE
 
 int main() {
     static int A_B[SIZE][SIZE], C_D[SIZE][SIZE], result[SIZE][SIZE];
+    omp_set_nested(1);
 
     struct timespec start_time, end_time;
     clock_gettime(CLOCK_MONOTONIC, &start_time);
     #pragma omp parallel sections
     {
         #pragma omp section
-        {
-            matrix_multiply(A_B, A, B);
-        }
-
+        matrix_multiply(A_B, A, B);
         #pragma omp section
-        {
-            matrix_multiply(C_D, C, D);
-        }
+        matrix_multiply(C_D, C, D);
     }
 
     #pragma omp parallel for

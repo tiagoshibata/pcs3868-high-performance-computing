@@ -2,8 +2,6 @@
 #include <sys/sysinfo.h>
 #include <time.h>
 
-#include <omp.h>
-
 #define SIZE 1000
 int A[SIZE][SIZE], B[SIZE][SIZE], C[SIZE][SIZE], D[SIZE][SIZE];
 
