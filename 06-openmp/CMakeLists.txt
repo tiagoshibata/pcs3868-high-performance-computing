@@ -9,9 +9,5 @@ add_executable(matrix_multiply_add matrix_multiply_add.c)
 target_link_libraries(matrix_multiply_add PRIVATE OpenMP::OpenMP_C)
 target_compile_options(matrix_multiply_add PRIVATE -Wall -Wextra -pedantic)
 
-# add_executable(find_element find_element.c)
-# target_link_libraries(find_element PRIVATE OpenMP::OpenMP_C)
-# target_compile_options(find_element PRIVATE -Wall -Wextra -pedantic)
-#
-# add_executable(find_element_serial find_element_serial.c)
-# target_compile_options(find_element_serial PRIVATE -Wall -Wextra -pedantic)
+add_executable(matrix_multiply_add_serial matrix_multiply_add_serial.c)
+target_compile_options(matrix_multiply_add_serial PRIVATE -Wall -Wextra -pedantic)
