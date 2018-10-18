@@ -15,3 +15,12 @@ target_compile_options(merge-sort PRIVATE -Wall -Wextra -pedantic)
 
 add_executable(merge-sort-serial merge-sort-serial.c)
 target_compile_options(merge-sort-serial PRIVATE -Wall -Wextra -pedantic)
+
+add_executable(linked-list-parallel linked-list-parallel.c)
+target_link_libraries(linked-list-parallel PRIVATE OpenMP::OpenMP_C)
+target_compile_options(linked-list-parallel PRIVATE -Wall -Wextra -pedantic)
+
+# add_executable(matrix_multiply_add_serial matrix_multiply_add_serial.c)
+# target_compile_options(matrix_multiply_add_serial PRIVATE -Wall -Wextra -pedantic)
+
+

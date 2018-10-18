@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <omp.h>
+#include <time.h>
 #define n 10
 typedef struct {int a; int *proximo;} tipo_lista;
 tipo_lista *lista;
@@ -23,15 +24,19 @@ void inicia(int size)
      
   
 void main()
-{  tipo_lista *prox;
+{
+struct timespec start_time, end_time;
+    tipo_lista *prox;
      inicia(n); 
      prox=lista_first;
+     clock_gettime(CLOCK_MONOTONIC, &start_time);
      while (prox) {
         lista=prox;
         printf("%d \n",lista->a);
         sleep(lista->a);
         prox=lista->proximo;
      }
-     printf("FIM MAIN\n");
+     printf("FIM MAIN\nTime: %.5fms\n",
+    (end_time.tv_sec * 1000 + 1e-6 * end_time.tv_nsec) - (start_time.tv_sec * 1000 + 1e-6 * start_time.tv_nsec));
 }
 
