@@ -36,6 +36,7 @@ struct timespec start_time, end_time;
         sleep(lista->a);
         prox=lista->proximo;
      }
+     clock_gettime(CLOCK_MONOTONIC, &end_time);
      printf("FIM MAIN\nTime: %.5fms\n",
     (end_time.tv_sec * 1000 + 1e-6 * end_time.tv_nsec) - (start_time.tv_sec * 1000 + 1e-6 * start_time.tv_nsec));
 }
