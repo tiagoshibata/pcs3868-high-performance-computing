@@ -13,5 +13,5 @@ add_executable(merge-sort merge-sort.c)
 target_link_libraries(merge-sort PRIVATE OpenMP::OpenMP_C)
 target_compile_options(merge-sort PRIVATE -Wall -Wextra -pedantic)
 
-# add_executable(matrix_multiply_add_serial matrix_multiply_add_serial.c)
-# target_compile_options(matrix_multiply_add_serial PRIVATE -Wall -Wextra -pedantic)
+add_executable(merge-sort-serial merge-sort-serial.c)
+target_compile_options(merge-sort-serial PRIVATE -Wall -Wextra -pedantic)

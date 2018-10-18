@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 int i;
 int n;
@@ -34,17 +35,13 @@ void merge(int p,int q,int r, int v[]) {
 
 void merge_sort(int p,int r,int v[]) {
     int q;
-    if (p < r - 1){
+    if (p < r - 1) {
         q = (p + r) / 2;
-        #pragma omp parallel num_threads(4)
         {
-            #pragma omp single
-            {
-                #pragma omp task
-                merge_sort(p, q, v);
-                #pragma omp task
-                merge_sort(q, r, v);
-            }
+            #pragma omp task
+            merge_sort(p, q, v);
+            #pragma omp task
+            merge_sort(q, r, v);
         }
         merge(p, q, r, v);
     }
@@ -58,7 +55,16 @@ int main() {
     for (i = 0; i < n; i++)
         printf("%d ", v[i]);
     printf("\n");
-    merge_sort(0, n, v);
+    struct timespec start_time, end_time;
+    clock_gettime(CLOCK_MONOTONIC, &start_time);
+    #pragma omp parallel num_threads(4)
+    {
+        #pragma omp single
+        merge_sort(0, n, v);
+    }
+    clock_gettime(CLOCK_MONOTONIC, &end_time);
+    printf("Time: %.5fms\n",
+        (end_time.tv_sec * 1000 + 1e-6 * end_time.tv_nsec) - (start_time.tv_sec * 1000 + 1e-6 * start_time.tv_nsec));
     for (i = 0; i < n; i++)
         printf("%d ", v[i]);
     printf("\n");
