@@ -37,12 +37,10 @@ void merge_sort(int p,int r,int v[]) {
     int q;
     if (p < r - 1) {
         q = (p + r) / 2;
-        {
-            #pragma omp task
-            merge_sort(p, q, v);
-            #pragma omp task
-            merge_sort(q, r, v);
-        }
+        #pragma omp task if(r - p >= 32)
+        merge_sort(p, q, v);
+        #pragma omp task if(r - p >= 32)
+        merge_sort(q, r, v);
         merge(p, q, r, v);
     }
 }
