@@ -1,6 +1,7 @@
 #include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define SEQ_SIZE 12
 
@@ -47,8 +48,8 @@ int main() {
 	}
     fseek(f, 0L, SEEK_END);
     int file_size = ftell(f);
-    printf("file_size=%d\n", file_size);
     fseek(f, 0L, SEEK_SET);
+
     int n_seq = (file_size + 1) / (SEQ_SIZE - 1);
     char **seq_vet = (char **)malloc(n_seq * sizeof(char *));
     for (k = 0; k < n_seq; k++)
@@ -60,15 +61,22 @@ int main() {
         i++;
     }
 
-    printf("Digite a sequencia que deseja buscar: ");
+    printf("Search sequence: ");
     char sequencia[SEQ_SIZE];
     scanf("%s", sequencia);
 
+
+    struct timespec start_time, end_time;
+    clock_gettime(CLOCK_MONOTONIC, &start_time);
     int match = search(seq_vet, n_seq, sequencia);
+    clock_gettime(CLOCK_MONOTONIC, &end_time);
+    printf("Time: %.5fms\n",
+        (end_time.tv_sec * 1000 + 1e-6 * end_time.tv_nsec) - (start_time.tv_sec * 1000 + 1e-6 * start_time.tv_nsec));
+
     if (match)
-        printf("Sequencia encontrada na linha %d\n", match);
+        printf("Match at line %d\n", match);
     else
-        printf("Sequencia nao encontrada\n");
+        printf("Sequence not found\n");
    fclose(f);
    return 0;
 }
