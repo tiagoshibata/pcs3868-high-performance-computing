@@ -4,6 +4,6 @@ find_package(MPI)
 include_directories(SYSTEM ${MPI_INCLUDE_PATH})
 
 
-add_executable(trivial trivial.c)
-target_link_libraries(trivial ${MPI_C_LIBRARIES})
-target_compile_options(trivial PRIVATE -Wall -Wextra -pedantic)
+add_executable(ex1 ex1.c)
+target_link_libraries(ex1 ${MPI_C_LIBRARIES})
+target_compile_options(ex1 PRIVATE -Wall -Wextra -pedantic)
