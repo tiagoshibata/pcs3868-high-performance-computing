@@ -9,22 +9,22 @@ Numero de elementos do vetor: multiplo do número de processos.
 
 main(argc, argv)
 
-int			argc;
-char			*argv[];
+int argc;
+char *argv[];
 
 {
-	int n,n_nos, rank;
-	MPI_Status status;
+    int n,n_nos, rank;
+    MPI_Status status;
     int inicio,fim,vetor[100000],i,k;
     int max, max_parcial, max_total;
     struct timespec start_time, end_time;
 /*
  * Initialize MPI.
  */
-	MPI_Init(&argc, &argv);
+    MPI_Init(&argc, &argv);
 
-	MPI_Comm_size(MPI_COMM_WORLD, &n_nos);
-	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &n_nos);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	clock_gettime(CLOCK_MONOTONIC, &start_time);
     n=100000;
     k=n/n_nos;
@@ -59,7 +59,7 @@ char			*argv[];
        max_total=max_parcial;
        for(i=1;i<n_nos;i++){
          MPI_Recv(&max,1,MPI_INT,MPI_ANY_SOURCE,11,MPI_COMM_WORLD,&status);
-         if (vetor[i] > max) {
+         if (max > max_total) {
            max_total = max;
          }
        }
