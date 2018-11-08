@@ -17,6 +17,8 @@ void producer_0() {
         MPI_Bsend(m[i], SIZE, MPI_INT, 3, 0, MPI_COMM_WORLD);
     }
     MPI_Bsend(m[SIZE - 1], SIZE, MPI_INT, 3, 0, MPI_COMM_WORLD);
+    int size = sizeof(buffer);
+    MPI_Buffer_detach(buffer, &size);
 }
 
 void producer_1() {
@@ -33,6 +35,8 @@ void producer_1() {
         MPI_Bsend(m[i], SIZE, MPI_INT, 3, 0, MPI_COMM_WORLD);
     }
     MPI_Bsend(m[SIZE - 1], SIZE, MPI_INT, 3, 0, MPI_COMM_WORLD);
+    int size = sizeof(buffer);
+    MPI_Buffer_detach(buffer, &size);
 }
 
 void producer_2() {
@@ -49,6 +53,8 @@ void producer_2() {
         MPI_Bsend(m[i], SIZE, MPI_INT, 3, 0, MPI_COMM_WORLD);
     }
     MPI_Bsend(m[SIZE - 1], SIZE, MPI_INT, 3, 0, MPI_COMM_WORLD);
+    int size = sizeof(buffer);
+    MPI_Buffer_detach(buffer, &size);
 }
 
 void consumer() {
