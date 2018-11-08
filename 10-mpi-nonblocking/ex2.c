@@ -60,12 +60,13 @@ void producer_2() {
 void consumer() {
     int result[SIZE][SIZE];
     for (int i = 0; i < SIZE; i++) {
-        int row[3][SIZE];
-        for (int source = 0; source < 3; source++) {
-            MPI_Recv(row[source], SIZE, MPI_INT, source, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        int row[SIZE];
+        MPI_Recv(result[i], SIZE, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        for (int source = 1; source < 3; source++) {
+            MPI_Recv(row, SIZE, MPI_INT, source, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+            for (int j = 0; j < SIZE; j++)
+                result[i][j] += row[j];
         }
-        for (int j = 0; j < SIZE; j++)
-            result[i][j] = row[0][j] + row[1][j] + row[2][j];
     }
     printf("consumer:\n\tW[0][0] = %d\n\tW[300][400]=%d\n\tW[499][499]=%d\n", result[0][0], result[300][400], result[499][499]);
 }
