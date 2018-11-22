@@ -6,18 +6,21 @@
 #define SIZE    500
 #define max(a, b)   ((a) > (b) ? (a) : (b))
 
-int A[SIZE][SIZE], B[SIZE][SIZE], C[SIZE][SIZE], Z[SIZE][SIZE];
+int B[SIZE][SIZE], Z[SIZE][SIZE];
 
 void node_0() {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-            A[i][j] = i + j;
             B[i][j] = 2 * i - j;
         }
     }
 
     MPI_Request request_Y = NULL;
     for (int i = 0; i < SIZE; i++) {
+        int A_line[SIZE];
+        for (int j = 0; j < SIZE; j++) {
+            A_line[j] = i + j;
+        }
         int C_line[SIZE];
         MPI_Request request_C;
         MPI_Irecv(C_line, SIZE, MPI_INT, 1, 0, MPI_COMM_WORLD, &request_C);
@@ -26,7 +29,7 @@ void node_0() {
         for (int j = 0; j < SIZE; j++) {
             X_line[j] = 0;
             for (int k = 0; k < SIZE; k++) {
-                X_line[j] += A[i][k] * B[k][j];
+                X_line[j] += A_line[k] * B[k][j];
             }
         }
         MPI_Request request_X;
