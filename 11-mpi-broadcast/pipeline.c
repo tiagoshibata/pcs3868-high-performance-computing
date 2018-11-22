@@ -6,7 +6,7 @@
 #define SIZE    500
 #define max(a, b)   ((a) > (b) ? (a) : (b))
 
-double A[SIZE][SIZE], B[SIZE][SIZE], C[SIZE][SIZE], T[SIZE][SIZE], Z[SIZE][SIZE];
+int A[SIZE][SIZE], B[SIZE][SIZE], C[SIZE][SIZE], Z[SIZE][SIZE];
 
 void node_0() {
     for (int i = 0; i < SIZE; i++) {
@@ -18,26 +18,29 @@ void node_0() {
 
     MPI_Request request_Y = NULL;
     for (int i = 0; i < SIZE; i++) {
-        double C_line[SIZE];
+        int C_line[SIZE];
         MPI_Request request_C;
-        MPI_Irecv(C_line, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD, &request_C);
+        MPI_Irecv(C_line, SIZE, MPI_INT, 1, 0, MPI_COMM_WORLD, &request_C);
 
-        double X_line[SIZE];
+        int X_line[SIZE];
         for (int j = 0; j < SIZE; j++) {
-            X_line[i] = A[i][j] * B[j][i];
+            X_line[j] = 0;
+            for (int k = 0; k < SIZE; k++) {
+                X_line[j] += A[i][k] * B[k][j];
+            }
         }
         MPI_Request request_X;
-        MPI_Isend(X_line, SIZE, MPI_DOUBLE, 2, 0, MPI_COMM_WORLD, &request_X);
+        MPI_Isend(X_line, SIZE, MPI_INT, 2, 0, MPI_COMM_WORLD, &request_X);
 
         MPI_Wait(&request_C, MPI_STATUS_IGNORE);
         if (request_Y) {
             MPI_Wait(&request_Y, MPI_STATUS_IGNORE);
         }
-        double Y_line[SIZE];
+        int Y_line[SIZE];
         for (int i = 0; i < SIZE; i++) {
-            Y_line[i] = X_line[i] * C_line[i];
+            Y_line[i] = X_line[i] + C_line[i];
         }
-        MPI_Isend(Y_line, SIZE, MPI_DOUBLE, 2, 1, MPI_COMM_WORLD, &request_Y);
+        MPI_Isend(Y_line, SIZE, MPI_INT, 2, 1, MPI_COMM_WORLD, &request_Y);
 
         MPI_Wait(&request_X, MPI_STATUS_IGNORE);
     }
@@ -47,45 +50,39 @@ void node_0() {
 void node_1() {
     MPI_Request request_C = NULL;
     for (int i = 0; i < SIZE; i++) {
-        double C_line[SIZE];
+        int C_line[SIZE];
         for (int j = 0; j < SIZE; j++) {
             if (request_C) {
                 MPI_Wait(&request_C, MPI_STATUS_IGNORE);
             }
             C_line[j] = 2 * i + j;
         }
-        MPI_Isend(C_line, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &request_C);
+        MPI_Isend(C_line, SIZE, MPI_INT, 0, 0, MPI_COMM_WORLD, &request_C);
     }
     MPI_Wait(&request_C, MPI_STATUS_IGNORE);
 }
 
 void node_2() {
     for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
-            T[i][j] = i + j;
-        }
-    }
-
-    for (int i = 0; i < SIZE; i++) {
         MPI_Request request_X;
         MPI_Request request_Y;
-        double X_line[SIZE];
-        double Y_line[SIZE];
-        MPI_Irecv(X_line, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &request_X);
-        MPI_Irecv(Y_line, SIZE, MPI_DOUBLE, 0, 1, MPI_COMM_WORLD, &request_Y);
+        int X_line[SIZE];
+        int Y_line[SIZE];
+        MPI_Irecv(X_line, SIZE, MPI_INT, 0, 0, MPI_COMM_WORLD, &request_X);
+        MPI_Irecv(Y_line, SIZE, MPI_INT, 0, 1, MPI_COMM_WORLD, &request_Y);
         for (int j = 0; j < SIZE; j++) {
-            T[i][j] = i + j;
+            Z[i][j] = i + j;
         }
         MPI_Wait(&request_X, MPI_STATUS_IGNORE);
         for (int j = 0; j < SIZE; j++) {
-            T[i][j] += X_line[j];
+            Z[i][j] += X_line[j];
         }
         MPI_Wait(&request_Y, MPI_STATUS_IGNORE);
         for (int j = 0; j < SIZE; j++) {
-            T[i][j] += Y_line[j];
+            Z[i][j] += Y_line[j];
         }
     }
-    printf("T[0][0] = %f, T[250][250] = %f, T[499][499] = %f\n", T[0][0], T[250][250], T[499][499]);
+    printf("Z[0][0] = %d, Z[200][100] = %d, Z[499][499] = %d\n", Z[0][0], Z[200][100], Z[499][499]);
 }
 
 int main(int argc, char** argv) {
