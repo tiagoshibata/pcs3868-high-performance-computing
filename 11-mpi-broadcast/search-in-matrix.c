@@ -1,11 +1,12 @@
+#include <limits.h>
 #include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #define SIZE    1000
+#define max(a, b)   ((a) > (b) ? (a) : (b))
 
 int A[SIZE][SIZE];
-int job[SIZE];
 
 void initialize_data() {
     for (int i = 0; i < SIZE; i++) {
@@ -25,7 +26,21 @@ int main(int argc, char** argv) {
         initialize_data();
     }
 
-    MPI_Scatter(A, sizeof(A) / sizeof(int), MPI_DOUBLE, job, 1000, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    int job_size = SIZE * SIZE / comm_size;
+    int job[job_size];
+    MPI_Scatter(A, job_size, MPI_INT, job, job_size, MPI_INT, 0, MPI_COMM_WORLD);
+
+    int line_max = INT_MIN;
+    for (int i = 0; i < SIZE; i++) {
+        line_max = max(line_max, job[i]);
+    }
+
+    int global_max;
+    MPI_Reduce(&line_max, &global_max, 1, MPI_INT, MPI_MAX, 0, MPI_COMM_WORLD);
+
+    if (!rank) {
+        printf("Max value: %d\n", global_max);
+    }
 
     MPI_Finalize();
     return 0;
