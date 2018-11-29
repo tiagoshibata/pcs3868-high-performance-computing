@@ -14,7 +14,7 @@ void initialize(matrix_t m) {
     }
 }
 
-void node_0_1() {
+void node_0_1(int rank) {
     static matrix_t a, b;
     initialize(a);
     initialize(b);
@@ -29,6 +29,9 @@ void node_0_1() {
             }
         }
         MPI_Send(result, SIZE, MPI_DOUBLE, 2, 0, MPI_COMM_WORLD);
+        if (i == 0 || i == SIZE - 1) {
+            printf("Rank %d: [%d][%d] = %f\n", rank, i, i, result[i]);
+        }
     }
 }
 
@@ -44,6 +47,7 @@ void node_2() {
             result[i][j] += y_line[j];
         }
     }
+    printf("Rank 2: [0][0] = %f, [999][999] = %f\n", result[0][0], result[999][999]);
 }
 
 int main(int argc, char** argv) {
@@ -52,10 +56,11 @@ int main(int argc, char** argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
 
+    srand(rank << 4);
     switch (rank) {
         case 0:
         case 1:
-        node_0_1();
+        node_0_1(rank);
         break;
 
         case 2:
