@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.12.1)
+project(MPI_exercises C)
+find_package(MPI REQUIRED)
+include(FindOpenMP)
+if(NOT OPENMP_C_FOUND)
+    message(FATAL_ERROR "OpenMP could not be found.")
+endif(NOT OPENMP_C_FOUND)
+
+add_executable(pipeline pipeline.c)
+target_include_directories(pipeline PRIVATE ${MPI_INCLUDE_PATH})
+target_compile_options(pipeline PRIVATE -Wall -Wextra -pedantic)
+target_link_libraries(pipeline PRIVATE OpenMP::OpenMP_C ${MPI_C_LIBRARIES})
