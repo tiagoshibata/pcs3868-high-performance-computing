@@ -1,0 +1,17 @@
+cmake_minimum_required(VERSION 3.12.1)
+project(SimplexNoise C)
+include(FindOpenMP)
+if(NOT OPENMP_C_FOUND)
+    message(FATAL_ERROR "OpenMP could not be found.")
+endif(NOT OPENMP_C_FOUND)
+include(CheckIPOSupported)
+check_ipo_supported()
+
+add_executable(simplex_noise_serial src/simplex_noise_serial.c src/simplex_noise.c)
+set_property(TARGET simplex_noise_serial PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+target_compile_options(simplex_noise_serial PUBLIC "$<$<CONFIG:RELEASE>:-Ofast>")
+target_compile_options(simplex_noise_serial PRIVATE -Wall -Wextra -pedantic)
+
+# add_executable(simplex_noise_omp src/simplex_noise_omp.c)
+# target_compile_options(simplex_noise_omp PRIVATE -Wall -Wextra -pedantic)
+# target_link_libraries(simplex_noise_omp PRIVATE OpenMP::OpenMP_C)
