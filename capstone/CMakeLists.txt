@@ -11,7 +11,8 @@ add_executable(simplex_noise_serial src/simplex_noise_serial.c src/simplex_noise
 set_property(TARGET simplex_noise_serial PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
 target_compile_options(simplex_noise_serial PUBLIC "$<$<CONFIG:RELEASE>:-Ofast>")
 target_compile_options(simplex_noise_serial PRIVATE -Wall -Wextra -pedantic)
+target_link_libraries(simplex_noise_serial m)
 
-# add_executable(simplex_noise_omp src/simplex_noise_omp.c)
-# target_compile_options(simplex_noise_omp PRIVATE -Wall -Wextra -pedantic)
-# target_link_libraries(simplex_noise_omp PRIVATE OpenMP::OpenMP_C)
+add_executable(simplex_noise_omp src/simplex_noise_omp.c)
+target_compile_options(simplex_noise_omp PRIVATE -Wall -Wextra -pedantic)
+target_link_libraries(simplex_noise_omp PRIVATE OpenMP::OpenMP_C m)
