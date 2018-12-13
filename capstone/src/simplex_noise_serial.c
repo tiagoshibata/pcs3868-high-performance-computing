@@ -15,10 +15,16 @@ int main() {
 
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
-            uint8_t value = 255 * simplex_noise_2d(x, y);
-            buffer[3 * (y * width + x)] = value;
-            buffer[3 * (y * width + x) + 1] = value;
-            buffer[3 * (y * width + x) + 2] = value;
+            float fractal_value = simplex_noise_fractal_2d(16, 0.02 * x, 0.02 * y);
+            if (fractal_value > 0) {
+                buffer[3 * (y * width + x)] = 0;
+                buffer[3 * (y * width + x) + 1] = 255 * fractal_value;
+                buffer[3 * (y * width + x) + 2] = 0;
+            } else {
+                buffer[3 * (y * width + x)] = 0;
+                buffer[3 * (y * width + x) + 1] = 0;
+                buffer[3 * (y * width + x) + 2] = 255 + 200 * fractal_value;
+            }
         }
     }
     write_png_file("noise.png", buffer, width, height);
